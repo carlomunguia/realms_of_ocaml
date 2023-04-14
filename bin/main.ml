@@ -29,3 +29,66 @@ let add_num n1 n2 =
   | Float f1, Float f2 -> Float (f1 +. f2)
   | Error, _ -> Error
   | _, Error -> Error
+
+type 'a option = Some of 'a | None
+
+let safe_square_root x = if x > 0. then Some (sqrt x) else None
+
+type 'a btree = Empty | Node of 'a * 'a btree * 'a btree
+
+let rec member x btree =
+  match btree with
+  | Empty -> false
+  | Node (y, left, right) ->
+      if x = y then true else if x < y then member x left else member x right
+
+let rec insert x btree =
+  match btree with
+  | Empty -> Node (x, Empty, Empty)
+  | Node (y, left, right) ->
+      if x <= y then Node (y, insert x left, right)
+      else Node (y, left, insert x right)
+
+type first_record = { x : int; y : int; z : int }
+type middle_record = { x : int; z : int }
+type last_record = { x : int }
+type first_variant = A | B | C
+type last_variant = A
+
+let look_at_x_then_z (r : first_record) =
+  let x = r.x in
+  x + r.z
+
+let permute (x : first_variant) =
+  match x with A -> (B : first_variant) | B -> A | C -> C
+
+type wrapped = First of first_record
+
+let f (First r) = (r, r.x)
+
+let add_vect v1 v2 =
+  let len = min (Array.length v1) (Array.length v2) in
+  let res = Array.make len 0.0 in
+  for i = 0 to len - 1 do
+    res.(i) <- v1.(i) +. v2.(i)
+  done;
+  res
+
+type mutable_point = { mutable x : float; mutable y : float }
+
+let translate p dx dy =
+  p.x <- p.x +. dx;
+  p.y <- p.y +. dy
+
+let mypoint = { x = 0.0; y = 0.0 }
+
+let insertion_sort a =
+  for i = 1 to Array.length a - 1 do
+    let val_i = a.(i) in
+    let j = ref i in
+    while !j > 0 && val_i < a.(!j - 1) do
+      a.(!j) <- a.(!j - 1);
+      j := !j - 1
+    done;
+    a.(!j) <- val_i
+  done
