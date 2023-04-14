@@ -1,0 +1,4 @@
+(executable
+ (public_name realms_of_ocaml)
+ (name main)
+ (libraries realms_of_ocaml))
